@@ -28,7 +28,7 @@
             type:jsPsychHtmlKeyboardResponse,
             stimulus:`
             <p style="text-align: left;">In this experiment, you will read some texts and answer several questions based on the contexts.</p>
-            <p style="text-align: left;">You need to choose amoung 3 options: choice A, choice B, and choice C.</p>
+            <p style="text-align: left;">You need to choose among 3 options: choice A, choice B, and choice C.</p>
             <p style="text-align: left;">If you choose <strong>option A</strong>, press <strong>letter A</strong> on the keyboard.</p>
             <p style="text-align: left;">If you choose <strong>option B</strong>, press <strong>letter B</strong> on the keyboard.</p>
             <p style="text-align: left;">If you choose <strong>option C</strong>, press <strong>letter C</strong> on the keyboard.</p>
@@ -37,28 +37,9 @@
         }
         timeline.push(instruction);
 
-        // //create stimulus
-        // var Asian_disease_gain = {
-        //     type: jsPsychHtmlKeyboardResponse,
-        //     stimulus:`
-        //     <p style="text-align: left;">Recently, a dangerous new disease has been going around. Without medicine, 
-        //     600,000 people will die from it. </p>
-        //     <p style="text-align: left;">In order to save these people, 
-        //     two types of medicine are being made.</p>
-        //     <p style="text-align: left;">Now you have to choose, which one to use.</p>
-        //     <p style="text-align: left;">Option A: 200,000 people will be saved.</p>
-        //     <p style="text-align: left;">Option B: There is a 33.3% chance that 600,000 
-        //     people will be saved and a 66.6% chance that no one will be saved. </p>
-        //     <p style="text-align: left;">Option C: I want to decide later</p>
-        //     <p style="text-align: left;">Which medicine do you choose?</p>
-        //     `,
-        //     choices: ['a', 'b', 'c'],
-        //     // prompt: 'press a = choose Option A, press b = choose Option B, press c = choose Option C',
-        // }
-        // timeline.push(Asian_disease_gain)
-        
         /* define trial stimuli array for timeline variables */
     var test_problem = [
+      // Asian disease (Gain)
       { stimulus: `
         <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
         Without medicine, 600,000 people will die from it. </p>
@@ -69,8 +50,22 @@
         <p style="text-align: left;">Option B: There is a 33.3% chance that 600,000 
         people will be saved and a 66.6% chance that no one will be saved. </p>
         <p style="text-align: left;">Option C: I want to decide later</p>
-        <p style="text-align: left;">Which medicine do you choose?</p>
+        <p style="text-align: left;">Which option do you choose?</p>
         `},
+      // asian disease (Loss)
+      { stimulus: `
+        <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
+        Without medicine, 600,000 people will die from it. </p>
+        <p style="text-align: left;">In order to save these people, 
+        two types of medicine are being made.</p>
+        <p style="text-align: left;">Now you have to choose, which one to use.</p>
+        <p style="text-align: left;">Option A: 400,000 people will die.</p>
+        <p style="text-align: left;">Option B: There is a 33.3% chance that 
+        no one will die and a 66.6% chance that 600,000 will die. </p>
+        <p style="text-align: left;">Option C: I want to decide later</p>
+        <p style="text-align: left;">Which option do you choose?</p>
+        `},
+      // Unemployment problem (control)
       { stimulus: `
         <p style="text-align: left;">Imagine that the government is preparing to respond to an economic crisis. 
         The government expects that 300,000 people will lose their jobs.</p>
@@ -106,7 +101,8 @@
         /* define test procedure */
         var test_procedure = {
         timeline: [fixation, test],
-        timeline_variables: test_problem
+        timeline_variables: test_problem, 
+        // randomize_order: true,
         };
         timeline.push(test_procedure);
 
