@@ -38,51 +38,51 @@
         timeline.push(instruction);
 
         /* define trial stimuli array for timeline variables */
-    var test_problem = [
-      // Asian disease (Gain)
-      { stimulus: `
-        <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
-        Without medicine, 600,000 people will die from it. </p>
-        <p style="text-align: left;">In order to save these people, 
-        two types of medicine are being made.</p>
-        <p style="text-align: left;">Now you have to choose, which one to use.</p>
-        <p style="text-align: left;">Option A: 200,000 people will be saved.</p>
-        <p style="text-align: left;">Option B: There is a 33.3% chance that 600,000 
-        people will be saved and a 66.6% chance that no one will be saved. </p>
-        <p style="text-align: left;">Option C: I want to decide later</p>
-        <p style="text-align: left;">Which option do you choose?</p>
-        `},
-      // asian disease (Loss)
-      { stimulus: `
-        <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
-        Without medicine, 600,000 people will die from it. </p>
-        <p style="text-align: left;">In order to save these people, 
-        two types of medicine are being made.</p>
-        <p style="text-align: left;">Now you have to choose, which one to use.</p>
-        <p style="text-align: left;">Option A: 400,000 people will die.</p>
-        <p style="text-align: left;">Option B: There is a 33.3% chance that 
-        no one will die and a 66.6% chance that 600,000 will die. </p>
-        <p style="text-align: left;">Option C: I want to decide later</p>
-        <p style="text-align: left;">Which option do you choose?</p>
-        `},
-      // Unemployment problem (control)
-      { stimulus: `
-        <p style="text-align: left;">Imagine that the government is preparing to respond to an economic crisis. 
-        The government expects that 300,000 people will lose their jobs.</p>
-        <p style="text-align: left;">The government is considering two programs to reduce unemployment.</p>
-        <p style="text-align: left;">Now you have to choose which one to follow.</p>
-        <p style="text-align: left;">If you choose program A,</p>
-        <p style="text-align: left;">10,000 jobs will be saved.</p>
-        <p style="text-align: left;">If you choose program B,</p>
-        <p style="text-align: left;">290,000 jobs will be lost.</p>
-        <p style="text-align: left;">Which program do you choose?</p>
-        <p style="text-align: left;">Option C: I want to decide later</p>
-        <p style="text-align: left;">Which medicine do you choose?</p>
-        `},
-    //   { stimulus: `
-        
-    //     `},
-    ];
+        var test_problem = [
+          // Asian disease (Gain)
+          { stimulus: `
+            <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
+            Without medicine, 600,000 people will die from it. </p>
+            <p style="text-align: left;">In order to save these people, 
+            two types of medicine are being made.</p>
+            <p style="text-align: left;">Now you have to choose, which one to use.</p>
+            <p style="text-align: left;">Option A: 200,000 people will be saved.</p>
+            <p style="text-align: left;">Option B: There is a 33.3% chance that 600,000 
+            people will be saved and a 66.6% chance that no one will be saved. </p>
+            <p style="text-align: left;">Option C: I can't decide. </p>
+            <p style="text-align: left;">Which option do you choose?</p>
+            `},
+          // asian disease (Loss)
+          { stimulus: `
+            <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
+            Without medicine, 600,000 people will die from it. </p>
+            <p style="text-align: left;">In order to save these people, 
+            two types of medicine are being made.</p>
+            <p style="text-align: left;">Now you have to choose, which one to use.</p>
+            <p style="text-align: left;">Option A: 400,000 people will die.</p>
+            <p style="text-align: left;">Option B: There is a 33.3% chance that 
+            no one will die and a 66.6% chance that 600,000 will die. </p>
+            <p style="text-align: left;">Option C: I can't decide. </p>
+            <p style="text-align: left;">Which option do you choose?</p>
+            `},
+          // Unemployment problem (control)
+          { stimulus: `
+            <p style="text-align: left;">Imagine that the government is preparing to respond to an economic crisis. 
+            The government expects that 300,000 people will lose their jobs.</p>
+            <p style="text-align: left;">The government is considering two programs to reduce unemployment.</p>
+            <p style="text-align: left;">Now you have to choose which one to follow.</p>
+            <p style="text-align: left;">If you choose program A,</p>
+            <p style="text-align: left;">10,000 jobs will be saved.</p>
+            <p style="text-align: left;">If you choose program B,</p>
+            <p style="text-align: left;">290,000 jobs will be lost.</p>
+            <p style="text-align: left;">Which program do you choose?</p>
+            <p style="text-align: left;">Option C: I want to decide later</p>
+            <p style="text-align: left;">Which medicine do you choose?</p>
+            `},
+        //   { stimulus: `
+            
+        //     `},
+        ];
 
         /* define fixation and test trials */
         var fixation = {
