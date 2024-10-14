@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Main Experiment</title>
+        <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+        <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body></body>
+    <script>
+        // Initialize jsPsych
+        var jsPsych = initJsPsych();
+        var timeline = [];
+
+        // Function to randomly select and redirect to the appropriate experiment
+        function randomAllocation() {
+            // 50% chance to load either gain or loss experiment
+            if (Math.random() < 0.5) {
+                window.location.href = "gain_exp.html";  // Redirect to gain experiment
+            } else {
+                window.location.href = "loss_exp.html";  // Redirect to loss experiment
+            }
+        }
+
+        // Add redirection after welcome message
+        timeline.push({
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "Welcome to the experiment. Press any key to begin the experiment.",
+            on_finish: function() {
+                randomAllocation();  // Call the function to redirect to one of the tasks
+            }
+        });
+
+        // Run the experiment
+        jsPsych.run(timeline);
+    </script>
+</html>
