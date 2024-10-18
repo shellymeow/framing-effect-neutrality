@@ -167,8 +167,14 @@
         timeline.push(...createTestProcedure(stimulus_damaged_painting, stimulus_followup_damaged_painting));
         timeline.push(...createTestProcedure(stimulus_computer_virus, stimulus_followup_computer_virus));
 
-
+        
         // Add survey at the end
+        timeline.push({
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "Thank you for participating! You will now complete a survey. Press any key to proceed to the survey.",
+        });
+
+        // Define Likert scale
         var likert_scale = [
             "1<br>Strongly Disagree", 
             "2", 
@@ -177,6 +183,7 @@
             "5<br>Strongly Agree",
         ];
 
+        // Define survey trails
         var trial = {
             type: jsPsychSurveyLikert,
             questions: [
