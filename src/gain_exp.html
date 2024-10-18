@@ -177,14 +177,14 @@
             "5<br>Strongly Agree",
         ];
 
-    var trial = {
-        type: jsPsychSurveyLikert,
-        questions: [
-            {prompt: "I think the question doesn’t matter to me.", name: 'Indifference', labels: likert_scale},
-            {prompt: "I feel it’s not my responsibility to make a choice in this situation.", name: 'Responsibility', labels: likert_scale},
-            {prompt: "I think I would need more information to decide..", name: 'InformationSeeking', labels: likert_scale},
-            ],
-        };
+        var trial = {
+            type: jsPsychSurveyLikert,
+            questions: [
+                {prompt: "I think the question doesn’t matter to me.", name: 'Indifference', labels: likert_scale},
+                {prompt: "I feel it’s not my responsibility to make a choice in this situation.", name: 'Responsibility', labels: likert_scale},
+                {prompt: "I think I would need more information to decide..", name: 'InformationSeeking', labels: likert_scale},
+                ],
+            };
 
 
         timeline.push(trial)
