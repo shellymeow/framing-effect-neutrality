@@ -23,12 +23,41 @@
             }
         }
 
-        // Add redirection after welcome message
+
+
+        /* define welcome message trial */
+        var welcome = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: "Welcome to the experiment. Press any key to begin."
+        };
+        timeline.push(welcome);
+  
+        /* define instructions trial */
+        var instructions = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: `
+                <p style="text-align: left;">In this experiment, you will read some texts and make decisions based on the contexts.</p>
+                <p style="text-align: left;">You need to choose among 3 options: choice A, choice B, and choice C.</p>
+                <p style="text-align: left;">If you choose <strong>option A</strong>, press <strong>letter A</strong> on the keyboard.</p>
+                <p style="text-align: left;">If you choose <strong>option B</strong>, press <strong>letter B</strong> on the keyboard.</p>
+                <p style="text-align: left;">If you choose <strong>option C</strong>, press <strong>letter C</strong> on the keyboard.</p>
+                <p style="text-align: left;">Press any key to continue.</p>
+            `,
+        };
+        timeline.push(instructions);
+  
+
+        // Add redirection after instruction
         timeline.push({
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: "Welcome to the experiment. Press any key to begin the experiment.",
+            stimulus: `
+                <p style="text-align: left;">Now, we will start the experiment. </p>
+                <p style="text-align: left;">Press any key to begin.</p>
+            `,
             on_finish: function() {
-                randomAllocation();  // Call the function to redirect to one of the tasks
+                setTimeout(function() {
+                    randomAllocation();  // Call the function to redirect to one of the tasks
+                }, 2000);
             }
         });
 
