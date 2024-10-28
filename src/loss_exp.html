@@ -26,10 +26,10 @@
         // ==================== Question 1: Asian Disease ====================
         const prompt_asian_disease = `
             <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
-            Without medicine, 600,000 people will die from it. </p>
+            Without medicine, 600,000 people will die from it.</p>
             <p style="text-align: left;">In order to save these people, 
             two types of medicine are being made.</p>
-            <p style="text-align: left;">Now you have to choose, which one to use.</p>
+            <p style="text-align: left;">Now you have to choose which one to use.</p>
         `;
         const option_a_asian_disease = '400,000 people will die.';
         const option_b_asian_disease = 'There is a 33.3% chance that no one will die and a 66.6% chance that 600,000 will die.';
@@ -47,39 +47,48 @@
             ],
         };
 
-        // Follow-up question 
-        var followup_asian_disease = {
-            type: jsPsychSurveyMultiChoice,
-            questions: [
-                {
-                    prompt: prompt_followup, 
-                    name: 'AsianDiseaseFollowup', 
-                    options: [option_a_asian_disease, option_b_asian_disease],  // Only A and B options
-                    required: true
-                }
-            ],
-            conditional_function: function() {
-                // Retrieve the data from the last trial
-                var last_trial_data = jsPsych.data.get().last(1).values()[0];
-        
-                // Debugging: Log the response to ensure we're accessing it correctly
-                console.log('Last trial data:', last_trial_data);
-        
-                // Extract the response of the first question using the name 'AsianDisease'
-                var response = last_trial_data.response['AsianDisease']; // Ensure the correct key is used
-        
-                // Debugging: Log the response value to verify what was selected
-                console.log('Selected response:', response);
-        
-                // Return true if the third option ('I can\'t decide.') was selected, otherwise return false
-                return response === option_c_neutral;
-            }
-            
-        };
+        // Function to create feedback prompts
+        function create_feedback_prompt_disease(selectedOption) {
+            return {
+                type: jsPsychSurveyMultiChoice,
+                questions: [
+                    {
+                        prompt: `<p>You chose:</p>
+                            <p>${selectedOption}</p>
+                            <p>Do you want to <b>change</b> your decision?</p>`, 
+                        name: 'FeedbackAsianDisease', 
+                        options: ['Yes', 'No'], 
+                        required: true
+                    }
+                ]
+            };
+        }
 
-        // Add both trials to the timeline
-        timeline.push(asian_disease);          // First question with A, B, C
-        timeline.push(followup_asian_disease); // Follow-up question if C is chosen
+        // Function to add conditional feedback based on selected option
+        function add_conditional_feedback_disease(optionText, feedbackPrompt) {
+            return {
+                timeline: [feedbackPrompt],
+                conditional_function: function() {
+                    var last_response = jsPsych.data.get().last(1).values()[0].response.AsianDisease;
+                    return last_response === optionText;
+                }
+            };
+        }
+
+        // Define feedback prompts
+        var feedback_prompt_a_disease = create_feedback_prompt_disease(option_a_asian_disease);
+        var feedback_prompt_b_disease = create_feedback_prompt_disease(option_b_asian_disease);
+
+        // Define conditional feedback
+        var conditional_feedback_a_disease = add_conditional_feedback_disease(option_a_asian_disease, feedback_prompt_a_disease);
+        var conditional_feedback_b_disease = add_conditional_feedback_disease(option_b_asian_disease, feedback_prompt_b_disease);
+        var conditional_feedback_c_disease = add_conditional_feedback_disease(option_c_neutral, feedback_prompt_b_disease);  // Uses option B feedback for option C
+
+        // Add trials to the timeline
+        timeline.push(asian_disease);           // Main question
+        timeline.push(conditional_feedback_a_disease);   // Feedback for Option A
+        timeline.push(conditional_feedback_b_disease);   // Feedback for Option B
+        timeline.push(conditional_feedback_c_disease);   // Feedback for Option C
 
         // ==================== Question 3: Damaged_Painting ====================
         const prompt_damaged_painting = `
@@ -96,34 +105,56 @@
         var damaged_painting = {
             type: jsPsychSurveyMultiChoice,
             questions: [
-                {
+                   {
                     prompt: prompt_damaged_painting, 
                     name: 'DamagedPainting', 
                     options: [option_a_damaged_painting, option_b_damaged_painting, option_c_neutral], 
                     required: true
                 }
-            ],
-        };
-
-        // Follow-up question 
-        var followup_damaged_painting = {
-            type: jsPsychSurveyMultiChoice,
-            questions: [
-                {
-                    prompt: prompt_followup, 
-                    name: 'DamagedPaintingFollowup', 
-                    options: [option_a_damaged_painting, option_b_damaged_painting],  
-                    required: true
-                }
-            ],
-            conditional_function: function() {
-                var last_trial_data = jsPsych.data.get().last(1).values()[0];
-                return last_trial_data.response['Q0'] === 2; 
+            ],            };
+    
+            // Function to create feedback prompts
+            function create_feedback_prompt_painting(selectedOption) {
+                return {
+                    type: jsPsychSurveyMultiChoice,
+                    questions: [
+                        {
+                            prompt: `<p>You chose:</p>
+                                <p>${selectedOption}</p>
+                                <p>Do you want to <b>change</b> your decision?</p>`, 
+                            name: 'FeedbackDamagedPainting', 
+                            options: ['Yes', 'No'], 
+                            required: true
+                        }
+                    ]
+                };
             }
-        };
-
-        timeline.push(damaged_painting);          
-        timeline.push(followup_damaged_painting); 
+    
+            // Function to add conditional feedback based on selected option
+            function add_conditional_feedback_painting(optionText, feedbackPrompt) {
+                return {
+                    timeline: [feedbackPrompt],
+                    conditional_function: function() {
+                        var last_response = jsPsych.data.get().last(1).values()[0].response.DamagedPainting;
+                        return last_response === optionText;
+                    }
+                };
+            }
+    
+            // Define feedback prompts
+            var feedback_prompt_a_painting = create_feedback_prompt_painting(option_a_damaged_painting);
+            var feedback_prompt_b_painting = create_feedback_prompt_painting(option_b_damaged_painting);
+    
+            // Define conditional feedback
+            var conditional_feedback_a_painting = add_conditional_feedback_painting(option_a_damaged_painting, feedback_prompt_a_painting);
+            var conditional_feedback_b_painting = add_conditional_feedback_painting(option_b_damaged_painting, feedback_prompt_b_painting);
+            var conditional_feedback_c_painting = add_conditional_feedback_painting(option_c_neutral, feedback_prompt_b_painting);  // Uses option B feedback for option C
+    
+            // Add trials to the timeline
+            timeline.push(damaged_painting);           // Main question
+            timeline.push(conditional_feedback_a_painting);   // Feedback for Option A
+            timeline.push(conditional_feedback_b_painting);   // Feedback for Option B
+            timeline.push(conditional_feedback_c_painting);   // Feedback for Option C
 
         // ==================== Question 4: Computer Virus ====================
         const prompt_computer_virus = `
@@ -149,26 +180,48 @@
             ],
         };
 
-        // Follow-up question 
-        var followup_computer_virus = {
-            type: jsPsychSurveyMultiChoice,
-            questions: [
-                {
-                    prompt: prompt_followup, 
-                    name: 'ComputerVirusFollowup', 
-                    options: [option_a_computer_virus, option_b_computer_virus],
-                    required: true
-                }
-            ],
-            conditional_function: function() {
-                var last_trial_data = jsPsych.data.get().last(1).values()[0];
-                return last_trial_data.response['Q0'] === 2; 
-            }
-        };
+        // Function to create feedback prompts
+        function create_feedback_prompt_virus(selectedOption) {
+            return {
+                type: jsPsychSurveyMultiChoice,
+                questions: [
+                    {
+                        prompt: `<p>You chose:</p>
+                            <p>${selectedOption}</p>
+                            <p>Do you want to <b>change</b> your decision?</p>`, 
+                        name: 'FeedbackDamagedvirus', 
+                        options: ['Yes', 'No'], 
+                        required: true
+                    }
+                ]
+            };
+        }
 
-        timeline.push(computer_virus);          
-        timeline.push(followup_computer_virus); 
-        
+        // Function to add conditional feedback based on selected option
+        function add_conditional_feedback_virus(optionText, feedbackPrompt) {
+            return {
+                timeline: [feedbackPrompt],
+                conditional_function: function() {
+                    var last_response = jsPsych.data.get().last(1).values()[0].response.ComputerVirus;
+                    return last_response === optionText;
+                }
+            };
+        }
+
+        // Define feedback prompts
+        var feedback_prompt_a_virus = create_feedback_prompt_virus(option_a_computer_virus);
+        var feedback_prompt_b_virus = create_feedback_prompt_virus(option_b_computer_virus);
+
+        // Define conditional feedback
+        var conditional_feedback_a_virus = add_conditional_feedback_virus(option_a_computer_virus, feedback_prompt_a_virus);
+        var conditional_feedback_b_virus = add_conditional_feedback_virus(option_b_computer_virus, feedback_prompt_b_virus);
+        var conditional_feedback_c_virus = add_conditional_feedback_virus(option_c_neutral, feedback_prompt_b_virus);  // Uses option B feedback for option C
+
+        // Add trials to the timeline
+        timeline.push(computer_virus);           // Main question
+        timeline.push(conditional_feedback_a_virus);   // Feedback for Option A
+        timeline.push(conditional_feedback_b_virus);   // Feedback for Option B
+        timeline.push(conditional_feedback_c_virus);   // Feedback for Option C
 
         /** ---------------------  2. Survey ------------------------------ */
 

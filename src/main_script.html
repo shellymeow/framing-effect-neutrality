@@ -17,13 +17,12 @@
 
         // Function to randomly select and redirect to the appropriate experiment
         function randomAllocation() {
-            // 50% chance to load either gain or loss experiment
-            if (Math.random() < 0.5) {
-                window.location.href = "gain_exp_multi_choice.html";  // Redirect to gain experiment
-            } else {
-                window.location.href = "loss_exp_multi_choice.html";  // Redirect to loss experiment
-            }
+            // Changed: Added a logging statement to track the allocation
+            const allocation = Math.random() < 0.5 ? "gain_exp.html" : "loss_exp.html";
+            console.log("Redirecting to:", allocation); // Log the allocation  <-- Change
+            window.location.href = allocation;  
         }
+
 
         /**  Welcome */
         var welcome = {
@@ -102,16 +101,13 @@
             <p style="text-align: left;">In this experiment, you will read a few texts and make decisions based on each contexts.</p>
             <p style="text-align: left;">You need to choose among 3 options.</p>
         `;
-        const page3 = `
-            <p style="text-align: left;"> Great, you're ready for the experiment.</p>
-        `;
 
         var instructions = {
             data: {
                 screen_id: "instruction"
             },
             type: jsPsychInstructions,
-            pages: [page1, page2, page3],
+            pages: [page1, page2],
             button_label_next: "Next",
             button_label_previous: "Previous",
             show_clickable_nav: true,
