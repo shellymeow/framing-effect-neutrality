@@ -19,9 +19,9 @@
         function randomAllocation() {
             // 50% chance to load either gain or loss experiment
             if (Math.random() < 0.5) {
-                window.location.href = "gain_exp.html";  // Redirect to gain experiment
+                window.location.href = "gain_exp_multi_choice.html";  // Redirect to gain experiment
             } else {
-                window.location.href = "loss_exp.html";  // Redirect to loss experiment
+                window.location.href = "loss_exp_multi_choice.html";  // Redirect to loss experiment
             }
         }
 
@@ -31,7 +31,7 @@
                 screen_id: "welcome"
             },
             type: jsPsychHtmlButtonResponse,
-            stimulus: '<h1>Welcome to the framing effects in neutral decision-making experiment.</h1><p><br>Please use Chrome, Firefox, Safari or Edge, and make sure that your Internet connection is stable.</p>',
+            stimulus: '<h1>Welcome to our hypothetical decision-making experiment.</h1><p><br>Please use Chrome, Firefox, Safari or Edge, and make sure that your Internet connection is stable.</p>',
             choices: ["Click here to continue"]
         };
 
@@ -100,10 +100,7 @@
 
         const page2 = `
             <p style="text-align: left;">In this experiment, you will read a few texts and make decisions based on each contexts.</p>
-            <p style="text-align: left;">You need to choose among 3 options: choice A, choice B, and choice C.</p>
-            <p style="text-align: left;">If you choose <strong>option A</strong>, press <strong>letter A</strong> on the keyboard.</p>
-            <p style="text-align: left;">If you choose <strong>option B</strong>, press <strong>letter B</strong> on the keyboard.</p>
-            <p style="text-align: left;">If you choose <strong>option C</strong>, press <strong>letter C</strong> on the keyboard.</p>
+            <p style="text-align: left;">You need to choose among 3 options.</p>
         `;
         const page3 = `
             <p style="text-align: left;"> Great, you're ready for the experiment.</p>

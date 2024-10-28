@@ -12,161 +12,173 @@
     <script>
                 
         // Initialize jsPsych
-        var jsPsych = initJsPsych();
+        var jsPsych = initJsPsych({
+            on_finish: function() {
+              jsPsych.data.displayData();
+            }
+          });
         var timeline = []; // Create the timeline
 
-        // Generalized function to create follow-up stimuli
-        function createFollowUpStimulus(question) {
-            return {
-                type: jsPsychHtmlKeyboardResponse,
-                stimulus: question,
-                choices: ['a', 'b']  // Follow-up question options
-            };
-        }
+        /** ---------------------  1. Task  ------------------------------ */
+        const option_c_neutral = 'I can\'t decide.';
+        const prompt_followup = 'Please choose between these two options';
 
-        // Function to create the main stimulus trials
-        function createMainStimulus(question) {
-            return {
-                type: jsPsychHtmlKeyboardResponse,
-                stimulus: question,
-                choices: ['a', 'b', 'c']  // Main question options
-            };
-        }
-
-        // Function to create conditional stimulus based on the response 'C'
-        function createConditionalStimulus(responseCheck, followUpStimulus) {
-            return {
-                timeline: [followUpStimulus],
-                conditional_function: function() {
-                    var last_trial_data = jsPsych.data.get().last(1).values()[0];
-                    return last_trial_data.response === responseCheck;  // Show follow-up if 'C' was chosen
-                }
-            };
-        }
-
-        // Function to create the entire procedure with conditional stimulus branching
-        function createTestProcedure(mainQuestion, followUpQuestion) {
-            const followUpStimulus = createFollowUpStimulus(followUpQuestion);
-            return [
-                fixation,                          // Fixation before each question
-                createMainStimulus(mainQuestion),  // Main stimulus question
-                createConditionalStimulus('c', followUpStimulus) // Show additional message if 'C' is chosen
-            ];
-        }
-
-        // Fixation screen shown before each question
-        const fixation = {
-            type: jsPsychHtmlKeyboardResponse,
-            stimulus: '<div style="font-size:60px;">+</div>',
-            choices: "NO_KEYS",
-            trial_duration: 1000,
-        };
-
-        // Main questions and follow-up questions
-        const stimulus_asian_disease = `
+        // ==================== Question 1: Asian Disease ====================
+        const prompt_asian_disease = `
             <p style="text-align: left;">Recently, a dangerous new disease has been going around. 
             Without medicine, 600,000 people will die from it. </p>
             <p style="text-align: left;">In order to save these people, 
             two types of medicine are being made.</p>
             <p style="text-align: left;">Now you have to choose, which one to use.</p>
-            <ul style="text-align: left;">
-            <li>Option A: 400,000 people will die.</li>
-            <li>Option B: There is a 33.3% chance that 
-            no one will die and a 66.6% chance that 600,000 will die. </li>
-            <li>Option C: I can't decide. </li>
-            </ul>
-            <p style="text-align: left;">Which option do you choose?</p>
         `;
+        const option_a_asian_disease = '400,000 people will die.';
+        const option_b_asian_disease = 'There is a 33.3% chance that no one will die and a 66.6% chance that 600,000 will die.';
 
-        const stimulus_followup_asian_disease = `
-            <p style="text-align: left;">Please choose again, which option do you choose?</p>
-            <ul style="text-align: left;">
-            <li>Option A: 400,000 people will die.</li>
-            <li>Option B: There is a 33.3% chance that 
-            no one will die and a 66.6% chance that 600,000 will die. </li>
-            </ul>
-        `;
+        // Main question
+        var asian_disease = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: prompt_asian_disease, 
+                    name: 'AsianDisease', 
+                    options: [option_a_asian_disease, option_b_asian_disease, option_c_neutral], 
+                    required: true
+                }
+            ],
+        };
 
-        const stimulus_unemployment = `
-            <p style="text-align: left;">Imagine that the government is preparing to respond to an economic crisis. 
-            The government expects that 300,000 people will lose their jobs.</p>
-            <p style="text-align: left;">The government is considering two programs to reduce unemployment.</p>
-            <p style="text-align: left;">Now you have to choose which one to follow.</p>
-            <ul style="text-align: left;">
-            <li>Option A: 290,000 jobs will be lost.</li>
-            <li>Option B: There is a 99% chance that 300,000 jobs will be lost 
-            and a 1% chance that no jobs will be lost.</li> 
-            <li>Option C: I can't decide. </li>
-            </ul>
-            <p style="text-align: left;">Which option do you choose?</p>
-        `; // E[B] = 297,000 (loss)
+        // Follow-up question 
+        var followup_asian_disease = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: prompt_followup, 
+                    name: 'AsianDiseaseFollowup', 
+                    options: [option_a_asian_disease, option_b_asian_disease],  // Only A and B options
+                    required: true
+                }
+            ],
+            conditional_function: function() {
+                // Retrieve the data from the last trial
+                var last_trial_data = jsPsych.data.get().last(1).values()[0];
+        
+                // Debugging: Log the response to ensure we're accessing it correctly
+                console.log('Last trial data:', last_trial_data);
+        
+                // Extract the response of the first question using the name 'AsianDisease'
+                var response = last_trial_data.response['AsianDisease']; // Ensure the correct key is used
+        
+                // Debugging: Log the response value to verify what was selected
+                console.log('Selected response:', response);
+        
+                // Return true if the third option ('I can\'t decide.') was selected, otherwise return false
+                return response === option_c_neutral;
+            }
+            
+        };
 
-        const stimulus_followup_unemployment = `
-            <p style="text-align: left;">Please choose again, which option do you choose?</p>
-            <ul style="text-align: left;">
-            <li>Option A: 290,000 jobs will be lost.</li>
-            <li>Option B: There is a 90% chance that 300,000 jobs will be lost 
-            and a 10% chance that no jobs will be lost. </li>
-            </ul>
-        `;
-        const stimulus_damaged_painting = `
+        // Add both trials to the timeline
+        timeline.push(asian_disease);          // First question with A, B, C
+        timeline.push(followup_asian_disease); // Follow-up question if C is chosen
+
+        // ==================== Question 3: Damaged_Painting ====================
+        const prompt_damaged_painting = `
             <p style="text-align: left;">A large museum is damaged by fire. 
             1,000 famous paintings are at the risk of being destroyed.</p>
             <p style="text-align: left;">Two alternative programs have been proposed to restore the paintings.</p>
             <p style="text-align: left;">Now you have to choose which one to follow, 
             or you may indicate if you are unsure.</p>
-            <ul style="text-align: left;">
-            <li>Option A: 600 paintings will be destroyed.</li>
-            <li>Option B: There is a 40% chance that no painting will be destroyed 
-            and a 60% chance that 1000 paintings will be destroyed.</li>
-            <li>Option C: I can't decide. </li>
-            </ul>
-            <p style="text-align: left;">Which option do you choose?</p>
         `;
+        const option_a_damaged_painting = '600 paintings will be destroyed.';
+        const option_b_damaged_painting = 'There is a 40% chance that no painting will be destroyed and a 60% chance that 1000 paintings will be destroyed.';
 
-        const stimulus_followup_damaged_painting = `
-            <p style="text-align: left;">Please choose again, which option do you choose?</p>
-            <ul style="text-align: left;">
-            <li>Option A: 600 paintings will be destroyed.</li>
-            <li>Option B: There is a 40% chance that no painting will be destroyed 
-            and a 60% chance that 1000 paintings will be destroyed.</li>
-            </ul>
-        `;
+        // Main question
+        var damaged_painting = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: prompt_damaged_painting, 
+                    name: 'DamagedPainting', 
+                    options: [option_a_damaged_painting, option_b_damaged_painting, option_c_neutral], 
+                    required: true
+                }
+            ],
+        };
 
-        const stimulus_computer_virus = `
+        // Follow-up question 
+        var followup_damaged_painting = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: prompt_followup, 
+                    name: 'DamagedPaintingFollowup', 
+                    options: [option_a_damaged_painting, option_b_damaged_painting],  
+                    required: true
+                }
+            ],
+            conditional_function: function() {
+                var last_trial_data = jsPsych.data.get().last(1).values()[0];
+                return last_trial_data.response['Q0'] === 2; 
+            }
+        };
+
+        timeline.push(damaged_painting);          
+        timeline.push(followup_damaged_painting); 
+
+        // ==================== Question 4: Computer Virus ====================
+        const prompt_computer_virus = `
             <p style="text-align: left;">There is a new computer virus which can infect certain computer software. 
             At the moment, this software is installed on 2 000 000 computers.</p>
             <p style="text-align: left;">Two types of antivirus software are being developed.</p>
             <p style="text-align: left;">Now you have to choose which one to use, 
             or you may indicate if you are unsure.</p>
-            <ul style="text-align: left;">
-            <li>Option A: 1,200,000 computers will be infected.</li>
-            <li>Option B: There is a 40% chance that no computer will be infected 
-            and a 60% chance that 2,000,000 computers will be infected.</li>
-            <li>Option C: I can't decide. </li>
-            </ul>
-            <p style="text-align: left;">Which option do you choose?</p>
         `;
+        const option_a_computer_virus = '1,200,000 computers will be infected.';
+        const option_b_computer_virus = 'There is a 40% chance that no computer will be infected and a 60% chance that 2,000,000 computers will be infected.';
 
-        const stimulus_followup_computer_virus = `
-            <p style="text-align: left;">Please choose again, which option do you choose?</p>
-            <ul style="text-align: left;">
-            <li>Option A: 1,200,000 computers will be infected.</li>
-            <li>Option B: There is a 40% chance that no computer will be infected 
-            and a 60% chance that 2,000,000 computers will be infected.</li>
-            </ul>
-        `;
+        // Main question
+        var computer_virus = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: prompt_computer_virus, 
+                    name: 'ComputerVirus', 
+                    options: [option_a_computer_virus, option_b_computer_virus, option_c_neutral], 
+                    required: true
+                }
+            ],
+        };
 
-        // Add the test procedure for both cats and dogs questions with their respective conditional stimuli
-        timeline.push(...createTestProcedure(stimulus_asian_disease, stimulus_followup_asian_disease));
-        timeline.push(...createTestProcedure(stimulus_unemployment, stimulus_followup_unemployment));
-        timeline.push(...createTestProcedure(stimulus_damaged_painting, stimulus_followup_damaged_painting));
-        timeline.push(...createTestProcedure(stimulus_computer_virus, stimulus_followup_computer_virus));
+        // Follow-up question 
+        var followup_computer_virus = {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: prompt_followup, 
+                    name: 'ComputerVirusFollowup', 
+                    options: [option_a_computer_virus, option_b_computer_virus],
+                    required: true
+                }
+            ],
+            conditional_function: function() {
+                var last_trial_data = jsPsych.data.get().last(1).values()[0];
+                return last_trial_data.response['Q0'] === 2; 
+            }
+        };
+
+        timeline.push(computer_virus);          
+        timeline.push(followup_computer_virus); 
         
-        // Add survey at the end
+
+        /** ---------------------  2. Survey ------------------------------ */
+
         timeline.push({
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: "Thank you for participating! You will now complete a survey. Press any key to proceed to the survey.",
+            stimulus: `
+            Thank you for participating! You will now complete a survey.
+            <br><br>
+            Press any key to proceed to the survey.
+            `,
         });
 
         // Define Likert scale
@@ -179,7 +191,7 @@
         ];
 
         // Define the survey trials
-        var trial = {
+        var survey_trial = {
             type: jsPsychSurveyLikert,
             questions: [
                 {prompt: "I think the question doesn’t matter to me.", name: 'Indifference', labels: likert_scale},
@@ -188,7 +200,7 @@
                 ],
         };
 
-        timeline.push(trial)
+        timeline.push(survey_trial)
 
 
         // Start the experiment
