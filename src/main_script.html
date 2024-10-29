@@ -90,18 +90,15 @@
         timeline.push(consent);
   
         /* Instruction */
-        const page1 = `
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: calc(100vh - 60px);">
-                <strong>Instruction</strong>
-                <p>Welcome to the experiment. Click next to begin.</p>
+        const page = `
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: calc(60vh - 60px); text-align: center;">
+                <strong style="font-size: 40px;">Instruction</strong>
+                <p style="text-align: left;">
+                    In this experiment, you will read a few texts and make decisions based on each context. You will be presented with three options for each task.</p>
+                <p style="text-align: left;">
+                    Two options are specified, and a <b>third option</b> allows you to <b>flip a coin</b> if you're <b>undecided</b>. Selecting the coin flip gives you a <b>50% chance</b> of taking either the first or second option.
+                </p>
             </div>
-        `;
-
-        const page2 = `
-            <p style="text-align: left;">In this experiment, you will read a few texts and make decisions based on each contexts.</p>
-            <p style="text-align: left;">You will be presented with three options for each task. 
-                Two options are specified, and a third option allows you to <b>flip a coin</b> if you're undecided. 
-                Selecting the coin flip gives you a <b>50% chance</b> of taking either the first or second option </p>
         `;
 
         var instructions = {
@@ -109,9 +106,8 @@
                 screen_id: "instruction"
             },
             type: jsPsychInstructions,
-            pages: [page1, page2],
-            button_label_next: "Next",
-            button_label_previous: "Previous",
+            pages: [page],
+            button_label_next: "Continue",
             show_clickable_nav: true,
             css_classes: ['instruction_style'],
             on_finish: function (data) {
