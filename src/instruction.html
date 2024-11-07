@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Main Experiment</title>
+        <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@1.0.3"></script>
+        <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body></body>
+    <script>
+        // Initialize jsPsych
+        const jsPsych = initJsPsych({
+            on_finish: function() {
+                jsPsych.data.displayData();
+            }
+        });
+        var timeline = [];
+
+        /**  Welcome  */
+        
+        /* Consent */
+
+        /* Instruction */
+        const page_instruction = `
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: calc(60vh - 60px); text-align: center;">
+                <strong style="font-size: 40px;">Instruction</strong>
+                <p style="text-align: left;">
+                    In this experiment, you will read a few texts and make decisions based on each context. You will be presented with <b>three</b> options for each task.</p>
+                <p style="text-align: left;">
+                    Two options are specified, and a <b>third option</b> allows you to <b>flip a coin</b> if you're <b>undecided</b>. Selecting the coin flip gives you a <b>50% chance</b> of taking either the first or second option.
+                </p>
+            </div>
+        `;
+
+        var instructions = {
+            data: {
+                screen_id: "instruction"
+            },
+            type: jsPsychInstructions,
+            pages: [page_instruction],
+            button_label_next: "Continue",
+            show_clickable_nav: true,
+            css_classes: ['instruction_style'],
+            on_finish: function (data) {
+                data.time_instruction_end = new Date();
+            }
+        }
+        timeline.push(instructions);
+
+        // Test question
+        /** Check question */
+        var checkQuestions = {
+            data: {
+                screen_id: "check-questions"
+            },
+            type: jsPsychSurvey,
+            pages: [
+                [
+                    {
+                        type: 'html',
+                        prompt: 'Please answer the following check questions:',
+                        name: 'CheckQ0'
+                    },
+                    {
+                        type: 'multi-choice',
+                        prompt: 'CheckQ1. What is the outcome if you choose to flip a coin?',
+                        options: ["Option A", "Option B", "Neither A or B", "50% chance A and 50% chance B", "Grey"],
+                        required: true,
+                        name: 'CheckQ1'
+                    },
+                ]
+            ],
+            show_question_numbers: "off",
+            css_classes: ['question_style'],
+            on_finish: function (data) {
+                const correct_response = {
+                    CheckQ0: null,
+                    CheckQ1: "50% chance A and 50% chance B",
+                };
+                const falseQuestionNames = Object.keys(data.response).filter(key => data.response[key] !== correct_response[key]);
+                if (falseQuestionNames.length === 0) {
+                    data.feedback = true;
+                    data.falseQuestionNames = null;
+                } else {
+                    data.feedback = false;
+                    data.falseQuestionNames = falseQuestionNames;
+                }
+            }
+        };
+        var checkQuestions_feedback = {
+            type: jsPsychHtmlButtonResponse,
+            choices: ["Continue"],
+            stimulus: function () {
+                var feedback = jsPsych.data.get().last(1).values()[0].feedback;
+                var falseQuestionNames = jsPsych.data.get().last(1).values()[0].falseQuestionNames;
+                if (feedback == true) {
+                    return "<p>Great!<br>You answered all check questions correcly.</p>";
+                } else {
+                    return `<p>Please answer questions <strong>${falseQuestionNames} </strong> correcly.</p>`;
+                };
+            },
+            data: {
+                screen_id: "check-question-feedback",
+            },
+        };
+        var loop_checkQuestions = {
+            timeline: [checkQuestions,checkQuestions_feedback],
+            loop_function: function () {
+            var feedback = jsPsych.data.get().last(2).values()[0].feedback;
+            if (feedback == true) {
+                return false;
+            } else {
+                return true;
+            }
+            },
+            on_finish: function (data) {
+            data.time_checkQ = new Date();
+            }
+        }
+        timeline.push(loop_checkQuestions);
+
+
+        // Run the experiment
+        jsPsych.run(timeline);
+    </script>
+</html>

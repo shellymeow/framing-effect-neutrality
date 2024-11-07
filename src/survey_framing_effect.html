@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>survey framing</title>
+        <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey@2.0.0"></script>
+        <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@2.0.0/css/survey.css">
+        <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body></body>
+    <script>
+        // Initialize jsPsych
+        const jsPsych = initJsPsych({
+            on_finish: function() {
+                jsPsych.data.displayData();
+            }
+        });
+
+        // Define the survey question for apples
+        const framingSurvey = {
+            type: jsPsychSurvey,
+            survey_json: {
+                showQuestionNumbers: false,
+                title: 'Survey Question',
+                completeText: 'Next >>',
+                elements: [
+                    {
+                        type: 'radiogroup',
+                        title: 'Have you heard about framing effect?',
+                        choices: ['Yes', 'No'],
+                        name: 'Q1'
+                    },
+                    {
+                        type: 'text',
+                        title: 'If yes, please explain in a few sentences.',
+                        name: 'Q2',
+                        cssClasses: ['large-text-box'],
+                    }
+                ]
+            },
+            data: {
+                'Q1_prompt': 'Do you like apples?',
+                'Q1_type': 'regular',
+                'Q2_word': 'like',
+                'fruit': 'apples'
+            }
+        };
+
+        // Add the survey to the timeline
+        const timeline = [framingSurvey];
+
+        // Run the experiment
+        jsPsych.run(timeline);
+    </script>
+</html>

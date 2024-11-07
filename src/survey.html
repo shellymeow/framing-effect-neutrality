@@ -10,6 +10,7 @@
         <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
         <script src="https://unpkg.com/@jspsych/plugin-image-button-response@2.0.0"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@1.0.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.0.0"></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
     </head>
     <body></body>
@@ -21,10 +22,10 @@
             }
         });
         var timeline = [];
-          
+        
 
         //** -------------------------Post survery----------------------------- */
-        //Survey prompt
+        // 1. Survey prompt
         const survey_prompt = 'Great! You have finished the task. Please take a moment to answer some questions about the task you just completed.<br><br>';
         timeline.push({
             type: jsPsychHtmlButtonResponse,
@@ -32,6 +33,8 @@
             choices: ['Continue']
         });
 
+
+        // 2. Strategy
         // Define Likert scale
         var likert_scale = [
             "1<br>Strongly Disagree", 
@@ -42,23 +45,42 @@
         ];
 
         // Define the survey trials
-        var survey_trial = {
+        var survey_strategy = {
             data: {
-              screen_id: "post-survey"
-          },
-              type: jsPsychSurveyLikert,
-              preamble: `<h2>Survey</h2>
+                screen_id: "post-survey-strategy"
+            },
+                type: jsPsychSurveyLikert,
+                preamble: `<h2>Survey</h2>
                 <p>Please indicate your level of agreement with each statement.</p>`,
-              questions: [
-                  {prompt: "I think these questions do not matter to me.", name: 'Indifference', labels: likert_scale},
-                  {prompt: "I feel that it is not my responsibility to make a choice in these situations.", name: 'Responsibility', labels: likert_scale},
-                  {prompt: "I think I would need more information to make my decisions.", name: 'InformationSeeking', labels: likert_scale},
-                  ],
-          };
+                questions: [
+                    {prompt: "I think these questions do not matter to me.", name: 'Indifference', labels: likert_scale},
+                    {prompt: "I feel that it is not my responsibility to make a choice in these situations.", name: 'Responsibility', labels: likert_scale},
+                    {prompt: "I think I would need more information to make my decisions.", name: 'InformationSeeking', labels: likert_scale},
+                    ],
+        };
 
-        timeline.push(survey_trial)
+        timeline.push(survey_strategy)
 
-        /** Demographic */
+        //3. Knowledge about framing effect
+        var survey_framing_effect = {
+            data: {
+                screen_id: "post-survey-framing-effect"
+            },
+            type: jsPsychSurveyText,
+            questions: [
+                {prompt: `
+                    <p>Do you know <b>Framing Effect</b>?</p>
+                    <p>If yes, please explain it in a few sentences. If not, simply type "No.</p>
+                `, rows: 20}
+            ],
+        }
+        timeline.push(survey_framing_effect)
+
+        //4. Knowledge about probability
+        var survey_probability = {
+            
+        }
+        //5. Demographic
         var demographicQuestions = {
             data: {
                 screen_id: "demographic-questions"
@@ -144,12 +166,8 @@
                 data.time_demoQ_end = new Date();
             },
         };
-      
-      timeline.push(demographicQuestions);
-      
-      
-
-
+        
+        timeline.push(demographicQuestions);
 
         // Run the experiment
         jsPsych.run(timeline);

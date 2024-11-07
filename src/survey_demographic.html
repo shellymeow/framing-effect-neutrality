@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Survey Demographic</title>
+        <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey@2.0.0"></script>
+        <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@2.0.0/css/survey.css">
+        <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body></body>
+    <script>
+        // Initialize jsPsych
+        const jsPsych = initJsPsych({
+            on_finish: function() {
+                jsPsych.data.displayData();
+            }
+        });
+
+        // Define demographic survey questions using survey_json format
+        const demographicQuestions = {
+            type: jsPsychSurvey,
+            survey_json: {
+                showQuestionNumbers: true,
+                elements: [
+                    {
+                        type: 'html',
+                        title: 'Please answer the following demographic questions:',
+                        required: true
+                    },
+                    {
+                        type: 'text',
+                        title: 'What year were you born?',
+                        name: 'age',
+                        inputType: 'number',
+                        required: true
+                    },
+                    {
+                        type: 'radiogroup',
+                        title: 'What is your gender identity?',
+                        name: 'gender',
+                        choices: ['Female', 'Male', 'Non-conforming', 'Prefer not to respond'],
+                        required: true
+                    },
+                    {
+                        type: 'radiogroup',
+                        title: 'Are you a native English speaker?',
+                        name: 'language',
+                        choices: ['Yes', 'No'],
+                        required: true
+                    },
+                    {
+                        type: 'text',
+                        title: 'What is your nationality?',
+                        name: 'nationality',
+                        inputType: 'text',
+                        required: true
+                    },
+                    {
+                        type: 'dropdown',
+                        title: 'What is the highest level of education you have completed?',
+                        name: 'education',
+                        choices: ['Some high school', 'High school', "Bachelor's degree", "Master's Degree", 'Ph.D. or higher'],
+                        required: true
+                    }
+                ]
+            },
+            data: {
+                screen_id: "demographic-questions"
+            },
+            css_classes: ['question_style'],
+            on_finish: function (data) {
+                data.time_demoQ_end = new Date();
+            }
+        };
+
+        // Add to timeline and run
+        const timeline = [demographicQuestions];
+        jsPsych.run(timeline);
+    </script>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Survey Strategy</title>
+        <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey@2.0.0"></script>
+        <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@2.0.0/css/survey.css">
+        <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body></body>
+    <script>
+        // Initialize jsPsych
+        const jsPsych = initJsPsych({
+            on_finish: function() {
+                jsPsych.data.displayData();
+            }
+        });
+
+        // Define likert style survey without "pages"
+        const survey_strategy = {
+            type: jsPsychSurvey,
+            survey_json: {
+                showQuestionNumbers: false,
+                title: 'Survey',
+                elements: [
+                    {
+                        type: 'matrix',
+                        name: 'decision-strategy-matrix',
+                        title: 'Please evaluate how much you considered about the following aspects during the experiment. ',
+                        alternateRows: true,
+                        isAllRowRequired: true,
+                        rows: [
+                            {text: 'If these questions matter to me.'},
+                            {text: 'If tit is not my responsibility to make a choice in these situations.'},
+                            {text: 'If the options are different to me.'},
+                            {text: 'If more information is needed to make my decisions.'}
+                        ],
+                        columns: [
+                            {"value": 5, "text": "Strongly agree"},
+                            {"value": 4, "text": "Agree"},
+                            {"value": 3, "text": "Neutral"},
+                            {"value": 2, "text": "Disagree"},
+                            {"value": 1, "text": "Strongly disagree"}
+                        ]
+                    },
+                    {
+                        type: 'text',
+                        name: 'additional strategies',
+                        title: 'Please specify if you used addtional strategies during the experiment. ',
+                    }
+                ]
+            }
+        };
+
+        // Add to timeline and run
+        const timeline = [survey_strategy];
+        jsPsych.run(timeline);
+    </script>
+</html>
