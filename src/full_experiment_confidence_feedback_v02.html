@@ -10,6 +10,8 @@
         <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
         <script src="https://unpkg.com/@jspsych/plugin-image-button-response@2.0.0"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@1.0.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey@2.0.0"></script>
+        <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@2.0.0/css/survey.css">
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
     </head>
     <body></body>
@@ -36,9 +38,98 @@
         ];
 
         /* ----------------------------------------------------------
-        /* Welcome */
+        /**  Welcome  */
+        var welcome = {
+            data: {
+                screen_id: "welcome"
+            },
+            type: jsPsychHtmlButtonResponse,
+            stimulus: '<h1>Welcome to our hypothetical decision-making experiment.</h1><p><br>Please use Chrome, Firefox, Safari or Edge, and make sure that your Internet connection is stable.</p>',
+            choices: ["Click here to continue"]
+        };
+        timeline.push(welcome);
+
         /* Consent */
+        var consent = {
+            data: {
+                screen_id: "consent-form"
+            },
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+            <h1>Consent Form</h1>
+            <p style="text-align: left;">
+            You are invited to participate in a research study on decision making. Before you decide whether to participate, it is important for you to understand the purpose of the study, what will be asked 
+            of you, and any potential risks or benefits associated with your participation. 
+            <br><br>
+        
+            <strong>Purpose of the Study:</strong><br>
+            The purpose of this study is to investigate partterns in decision-making, which may contribute to a better understanding of the decision-making process.
+            <br><br> 
+        
+            <strong>Procedures:</strong><br>
+            If you agree to participate in this study, you will be asked to complete an online task and answer some questions. The estimated time to complete the whole procedure is less than 10 minutes. 
+            Your responses will be anonymous and confidential, and no personally identifiable information will be collected.
+            <br><br> 
+        
+            <strong>Benefits and Risks:</strong><br>
+            There may not be any direct benefits to you for participating in this study. However, your participation will contribute to the advancement of knowledge in the field of social learning. 
+            There are minimal anticipated risks associated with participating in this study. However, if you feel uncomfortable answering any question or if you experience any emotional distress during the study, 
+            you are free to withdraw at any time without negative consequences.
+            <br><br> 
+        
+            <strong>Confidentiality:</strong><br>
+            All data collected during this study will be treated with strict confidentiality. Your responses will be stored securely and analyzed in aggregate form. No personally identifiable information will be linked 
+            to your responses. Any information that could potentially identify you will be removed or anonymized.
+            <br><br> 
+        
+            <strong>Voluntary Participation:</strong><br>
+            Participation in this study is completely voluntary. If you decide to participate, you are free to withdraw at any time without providing a reason. Your decision to participate or withdraw will be respected and will have no negative consequences.
+            <br><br>
+            Further information in details about the consent information can be found by following this link:  
+            <a target="_blank" href="http://www.dnhi-lab.org/ethics_online_en">consent information</a>.
+        
+            <br><br> 
+        
+            <strong>By clicking the following button and continuing with the study, you confirm that you have read and understood the information provided in this consent form. You freely and voluntarily agree to participate in this study.</strong>
+            </p>`,
+
+            choices: ["I agree to participate in this study."],
+            css_classes: ['consent_style'],
+            on_finish: function (data) {
+                data.time_consent_end = new Date();
+            },
+        };
+        timeline.push(consent);
+
         /* Instruction */
+        const page = `
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: calc(60vh - 60px); text-align: center;">
+                <strong style="font-size: 40px; margin-top: -20px; margin-bottom: 40px;">Instruction</strong>
+                <p style="text-align: left;">
+                    In this experiment, you will read a few texts and make decisions based on each context. You will be presented with <b>three</b> options for each task.</p>
+                <p style="text-align: left;">
+                    <b>Two options</b> are specified, and a <b>third option</b> allows you to <b>flip a coin</b> if you're <b>undecided</b>. 
+                <p style="text-align: left;">
+                    Selecting the coin flip gives you a <b>50% chance</b> of choosing </b>either</b> of the other two options. </p>
+                </p>
+            </div>
+        `;
+
+        var instructions = {
+            data: {
+                screen_id: "instruction"
+            },
+            type: jsPsychInstructions,
+            pages: [page],
+            button_label_next: "Continue",
+            show_clickable_nav: true,
+            css_classes: ['instruction_style'],
+            on_finish: function (data) {
+                data.time_instruction_end = new Date();
+            }
+        }
+
+        timeline.push(instructions);
         /* ----------------------------------------------------------
 
         /**  Setup Task  */
@@ -59,9 +150,9 @@
             questions: [
                 {
                 prompt: jsPsych.timelineVariable('question'),  // Use the question from timeline variables
-                options: ['A', 'B', 'C: Flip coin'], 
+                options: ['A', 'B', 'C: Flip a coin'], 
                 required: true,
-                horizontal: true
+                horizontal: true,
                 }, 
             ],
         };
@@ -78,7 +169,8 @@
                     "3", 
                     "4", 
                     "5<br>extremely confident",
-                ]
+                ],
+                required: true,
                 }
             ]
             };
@@ -93,8 +185,9 @@
                 screen_id: "practice-start"
             },
             type: jsPsychHtmlButtonResponse,
-            stimulus: `<p style="font-size: 32px"> 
-                Practice <br><br><br>
+            stimulus: `
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: calc(60vh - 60px); text-align: center;">
+                <strong style="font-size: 40px; margin-top: -20px; margin-bottom: 40px;">Practice</strong>
                 You will first start with the practice session so that you could get familar with the task.<br><br>
                 If you are ready, please click "Continue" to start.</p>`,
             choices: ["Continue"]
@@ -133,7 +226,124 @@
         /* ----------------------------------------------------------
         /* Survey 
         ------------------------------------------------------------ */
+        const survey = {
+            type: jsPsychSurvey,
+            survey_json: {
+                showQuestionNumbers: false,
+                title: 'Questionnaire',
+                completeText: 'Done!',
+                pageNextText: 'Continue',
+                pagePrevText: 'Previous',
+                pages: [
+                {
+                    name: 'page1',
+                    elements: [
+                    {
+                        type: 'matrix',
+                        name: 'decision-strategy-matrix',
+                        title: 'Please evaluate how much you considered about the following aspects during the experiment. ',
+                        alternateRows: true,
+                        isAllRowRequired: true,
+                        rows: [
+                            {text: 'If these questions matter to me.'},
+                            {text: 'If tit is not my responsibility to make a choice in these situations.'},
+                            {text: 'If the options are different to me.'},
+                            {text: 'If more information is needed to make my decisions.'}
+                        ],
+                        columns: [
+                            {"value": 5, "text": "Strongly agree"},
+                            {"value": 4, "text": "Agree"},
+                            {"value": 3, "text": "Neutral"},
+                            {"value": 2, "text": "Disagree"},
+                            {"value": 1, "text": "Strongly disagree"}
+                        ]
+                    },
+                    {
+                        type: 'text',
+                        name: 'additional strategies',
+                        title: 'Please specify if you used addtional strategies during the experiment. ',
+                    }
+                ]
+                },
+                {
+                    name: 'page2',
+                    elements: [
+                    {
+                        type: 'radiogroup',
+                        title: 'Have you heard about framing effect?',
+                        choices: ['Yes', 'No'],
+                        name: 'Q1'
+                    },
+                    {
+                        type: 'text',
+                        title: 'If yes, please explain in a few sentences.',
+                        name: 'Q2',
+                        cssClasses: ['large-text-box'],
+                    }
+                ]
+                }
+                ]
+            }
+            };
+        timeline.push(survey);
 
+        // Define demographic survey questions using survey_json format
+        const demographicQuestions = {
+            type: jsPsychSurvey,
+            survey_json: {
+                showQuestionNumbers: true,
+                elements: [
+                    {
+                        type: 'html',
+                        title: 'Please answer the following demographic questions:',
+                        required: true
+                    },
+                    {
+                        type: 'text',
+                        title: 'What year were you born?',
+                        name: 'age',
+                        inputType: 'number',
+                        required: true
+                    },
+                    {
+                        type: 'radiogroup',
+                        title: 'What is your gender identity?',
+                        name: 'gender',
+                        choices: ['Female', 'Male', 'Non-conforming', 'Prefer not to respond'],
+                        required: true
+                    },
+                    {
+                        type: 'radiogroup',
+                        title: 'Are you a native English speaker?',
+                        name: 'language',
+                        choices: ['Yes', 'No'],
+                        required: true
+                    },
+                    {
+                        type: 'text',
+                        title: 'What is your nationality?',
+                        name: 'nationality',
+                        inputType: 'text',
+                        required: true
+                    },
+                    {
+                        type: 'dropdown',
+                        title: 'What is the highest level of education you have completed?',
+                        name: 'education',
+                        choices: ['Some high school', 'High school', "Bachelor's degree", "Master's Degree", 'Ph.D. or higher'],
+                        required: true
+                    }
+                ]
+            },
+            data: {
+                screen_id: "demographic-questions"
+            },
+            css_classes: ['question_style'],
+            on_finish: function (data) {
+                data.time_demoQ_end = new Date();
+            }
+        };
+        timeline.push(demographicQuestions)
 
         // Run the experiment
         jsPsych.run(timeline);
