@@ -102,33 +102,31 @@
         timeline.push(consent);
 
         /* Instruction */
-        const page = `
-            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: calc(60vh - 60px); text-align: center;">
-                <strong style="font-size: 40px; margin-top: -20px; margin-bottom: 40px;">Instruction</strong>
-                <p style="text-align: left;">
-                    In this experiment, you will read a few texts and make decisions based on each context. You will be presented with <b>three</b> options for each task.</p>
-                <p style="text-align: left;">
-                    <b>Two options</b> are specified, and a <b>third option</b> allows you to <b>flip a coin</b> if you're <b>undecided</b>. 
-                <p style="text-align: left;">
-                    Selecting the coin flip gives you a <b>50% chance</b> of choosing </b>either</b> of the other two options. </p>
-                </p>
-            </div>
-        `;
-
+        const instruction_slides = [
+                `
+                <img src="../img/Instruction_01.png" ${styleSetup};></img>
+                `,
+                `
+                <img src="../img/Instruction_02.png" ${styleSetup};></img>
+                `,
+                `
+                <img src="../img/Instruction_03.png" ${styleSetup};></img>
+                `,
+            ];
         var instructions = {
             data: {
                 screen_id: "instruction"
             },
             type: jsPsychInstructions,
-            pages: [page],
-            button_label_next: "Continue",
+            pages: instruction_slides,
+            button_label_next: "Next",
+            button_label_previous: "Previous",
             show_clickable_nav: true,
             css_classes: ['instruction_style'],
             on_finish: function (data) {
                 data.time_instruction_end = new Date();
             }
         }
-
         timeline.push(instructions);
         /* ----------------------------------------------------------
 
@@ -209,7 +207,7 @@
                 screen_id: "formal-start"
             },
             type: jsPsychHtmlButtonResponse,
-            stimulus: `<p style="font-size: 32px"> Great! You have finished the practice session.<br><br>
+            stimulus: `<p> Great! You have finished the practice session.<br><br>
                 Next, you will start with the actual task.<br><br>
                 If you are ready, please click "Continue" to start.</p>`,
             choices: ["Continue"]
@@ -219,7 +217,8 @@
         /* Define test procedure */
         var test_procedure = {
             timeline: [fixation, test, evaluate_confidence],
-            timeline_variables: test_stimuli
+            timeline_variables: test_stimuli,
+            randomize_order: true
         };
         timeline.push(test_procedure);
 
