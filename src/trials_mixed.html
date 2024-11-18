@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Image Click Test</title>
+        <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
+        <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body></body>
+    <script>
+        // Initialize jsPsych
+        const jsPsych = initJsPsych({
+            on_finish: function() {
+                jsPsych.data.displayData();
+            }
+        });
+        
+        var timeline = [];
+
+        // Define styling for the questions and options
+        const contentStyle = 'text-align: center; font-size: 20px;';
+        const buttonStyle = 'font-size: 15px; width: 400px; height: 200px; padding: 10px; display: flex; align-items: center; justify-content: center; text-align: center; word-wrap: break-word;';
+
+        // Define the constant third choice
+        const flipCoinOption = `<div style="${buttonStyle}">I want to flip a coin</div>`;
+
+        // Define the task questions
+        const task_questions = [
+            {
+                question: "Disease", 
+                content: `
+                    <div style="${contentStyle}">
+                    <p>Recently, a dangerous new disease has been going around. 
+                    Without medicine, 600,000 people will die from it. <br>
+                    In order to save these people, two types of medicine are being made.<br>
+                    Now you have to choose which one to use.</p>
+                    </div>
+                    <p style="text-align:center;">Which medicine do you choose?</p>                
+                `,
+            },
+            {
+                question:"Unemployment",
+                content: `
+                    <div style="${contentStyle}">
+                    <p>Imagine that the government is preparing to respond to an economic crisis.
+                        The government expects that 300 000 people will lose their jobs. <br>
+                        The government is considering two programs to reduce unemployment. <br>
+                        Now you have to choose which one to follow.</p>
+                    </div>
+                    <p style="text-align:center;">Which program do you choose?</p>
+                `,
+            },
+            {
+                question:"Painting",
+                content: `
+                    <div style="${contentStyle}">
+                    <p>A large museum is damaged by fire. 1,000 famous paintings are at the risk of being destroyed. <br>
+                    Two alternative programs have been proposed to restore the paintings.<br>
+                    Now you have to choose which one to follow.</p>
+                    </div>
+                    <p style="text-align:center;">Which program do you choose?</p>
+                `,
+            },
+            {
+                question:"Virus",
+                content: `
+                    <div style="${contentStyle}">
+                    <p>There is a new computer virus which can infect certain computer software. <br>
+                    At the moment, this software is installed on 2 000 000 computers. <br>
+                    Two types of antivirus software are being developed. <br>
+                    Now you have to choose, which one to use.</p>
+                    </div>
+                    <p style="text-align:center;">Which antivirus software do you choose?</p>
+                `,
+            },
+        ];
+
+        // Define the choice options with frame and type attributes
+        const task_options = [
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">200,000 people will be saved.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">400,000 people will die.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">There is a 33.3% chance that 600,000 people will be saved <br> and a 66.6% chance that no one will be saved.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">There is a 33.3% chance that no one will die <br> and a 66.6% chance that 600,000 will die.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">10,000 jobs will be saved.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">290,000 jobs will be lost.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">There is a 30% chance that 300,000 jobs will be saved <br>and a 70% chance that no jobs will be saved.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">There is a 70% chance that no painting will be destroyed <br>and a 30% chance that 300,000 jobs will be destroyed.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">400 paintings will be saved.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">600 paintings will be destroyed.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">There is a 40% chance that 1,000 paintings will be saved <br>and a 60% chance that no painting will be saved.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">There is a 40% chance that no painting will be destroyed <br>and a 60% chance that 1,000 paintings will be destroyed.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">800,000 computers will remain virus-free.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">1,200,000 computers will be infected.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">There is a 40% chance that 2,000,000 computers will remain virus-free and a 60% chance that no computer will remain virus-free.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">There is a 40% chance that no computer will be infected and a 60% chance that 2,000,000 computers will be infected.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+        ];
+        
+        /** Setup Task */
+        // Coin flip to select gain or loss frames
+        var selected_frame = Math.random() > 0.5 ? "loss" : "gain";
+
+        // Define the trial with jsPsych html-button-response plugin
+        var trial = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: jsPsych.timelineVariable('content'),
+            choices: function() {
+                // Get the current question's 'question' parameter from timeline variables
+                var current_question = jsPsych.timelineVariable('question', true);
+
+                // Filter task_options for the matching question and selected frame
+                let filteredOptions = task_options
+                    .filter(option => option.question === current_question && option.frame === selected_frame)
+                    .map(option => option.content); // Return only the content of matching options
+
+                // Add the constant third choice to the filtered options
+                filteredOptions.push(flipCoinOption);
+
+                return filteredOptions;
+            }
+        };
+
+        // Define the trial procedure
+        var trial_procedure = {
+            timeline: [trial],
+            timeline_variables: task_questions
+        };
+
+        // Add to the main timeline
+        timeline.push(trial_procedure);
+
+        // Run the experiment
+        jsPsych.run(timeline);
+    </script>
+</html>

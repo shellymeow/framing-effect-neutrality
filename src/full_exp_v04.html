@@ -24,18 +24,177 @@
         });
         var timeline = [];
 
-        /**  Preload task images  */
-        const styleSetup = "style='width:1000px; height:auto; display:block; margin-left:auto; margin-right:auto;'";
-        const all_stimuli = [
-            {frame: "loss", type: "practice", question: `<img src='../img/Loss_unemployment_main_002.png' ${styleSetup}>`,},
-            {frame: "gain", type: "practice", question: `<img src='../img/Gain_unemployment_main_002.png' ${styleSetup}>`,},
-            {frame: "gain", type: "formal", question: `<img src='../img/Gain_disease_main_001.png' ${styleSetup}>`,},
-            {frame: "gain", type: "formal", question: `<img src='../img/Gain_painting_main_003.png' ${styleSetup}>`,},
-            {frame: "gain", type: "formal", question: `<img src='../img/Gain_virus_main_004.png' ${styleSetup}>`,},
-            {frame: "loss", type: "formal", question: `<img src='../img/Loss_disease_main_001.png' ${styleSetup}>`,},
-            {frame: "loss", type: "formal", question: `<img src='../img/Loss_painting_main_003.png' ${styleSetup}>`,},
-            {frame: "loss", type: "formal", question: `<img src='../img/Loss_virus_main_004.png' ${styleSetup}>`,},
+        /**  Define Questions and choices  */
+        // Define styling for the questions and options
+        const contentStyle = 'text-align: center; font-size: 20px;';
+        const buttonStyle = 'font-size: 15px; width: 450px; height: 150px; padding: 10px; display: flex; align-items: center; justify-content: center; text-align: center; word-wrap: break-word;';
+
+        // Define the constant third choice
+        const flipCoinOption = `<div style="${buttonStyle}">I want to flip a coin</div>`;
+
+        // Define the task questions
+        const task_questions = [
+            {
+                question: "Disease", 
+                type:"formal",
+                content: `
+                    <div style="${contentStyle}">
+                    <p>Recently, a dangerous new disease has been going around. 
+                    Without medicine, 600,000 people will die from it. <br>
+                    In order to save these people, two types of medicine are being made.<br>
+                    Now you have to choose which one to use.</p>
+                    </div>
+                    <p style="text-align:center;">Which medicine do you choose?</p>                
+                `,
+            },
+            {
+                question:"Unemployment",
+                type:"practice",
+                content: `
+                    <div style="${contentStyle}">
+                    <p>Imagine that the government is preparing to respond to an economic crisis.
+                        The government expects that 300 000 people will lose their jobs. <br>
+                        The government is considering two programs to reduce unemployment. <br>
+                        Now you have to choose which one to follow.</p>
+                    </div>
+                    <p style="text-align:center;">Which program do you choose?</p>
+                `,
+            },
+            {
+                question:"Painting",
+                type:"formal",
+                content: `
+                    <div style="${contentStyle}">
+                    <p>A large museum is damaged by fire. 1,000 famous paintings are at the risk of being destroyed. <br>
+                    Two alternative programs have been proposed to restore the paintings.<br>
+                    Now you have to choose which one to follow.</p>
+                    </div>
+                    <p style="text-align:center;">Which program do you choose?</p>
+                `,
+            },
+            {
+                question:"Virus",
+                type:"formal",
+                content: `
+                    <div style="${contentStyle}">
+                    <p>There is a new computer virus which can infect certain computer software. <br>
+                    At the moment, this software is installed on 2 000 000 computers. <br>
+                    Two types of antivirus software are being developed. <br>
+                    Now you have to choose, which one to use.</p>
+                    </div>
+                    <p style="text-align:center;">Which antivirus software do you choose?</p>
+                `,
+            },
         ];
+
+        // Define the choice options with frame and type attributes
+        const task_options = [
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">200,000 people will be saved.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">400,000 people will die.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">There is a 33.3% chance that 600,000 people will be saved 
+                        <br> and a 66.6% chance that no one will be saved.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Disease",
+                content:`<div style="${buttonStyle}">There is a 33.3% chance that no one will die 
+                        <br> and a 66.6% chance that 600,000 will die.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">10,000 jobs will be saved.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">290,000 jobs will be lost.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">There is a 30% chance that 300,000 jobs will be saved 
+                        <br>and a 70% chance that no jobs will be saved.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Unemployment",
+                content:`<div style="${buttonStyle}">There is a 70% chance that no painting will be destroyed 
+                        <br>and a 30% chance that 300,000 jobs will be destroyed.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">400 paintings will be saved.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">600 paintings will be destroyed.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">There is a 40% chance that 1,000 paintings will be saved 
+                        <br>and a 60% chance that no painting will be saved.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Painting",
+                content:`<div style="${buttonStyle}">There is a 40% chance that no painting will be destroyed 
+                        <br>and a 60% chance that 1,000 paintings will be destroyed.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">800,000 computers will remain virus-free.</div>`,
+                frame:"gain",
+                type:"certain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">1,200,000 computers will be infected.</div>`,
+                frame:"loss",
+                type:"certain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">There is a 40% chance that 2,000,000 computers will remain virus-free
+                        <br> and a 60% chance that no computer will remain virus-free.</div>`,
+                frame:"gain",
+                type:"uncertain"
+            },
+            {
+                question:"Virus",
+                content:`<div style="${buttonStyle}">There is a 40% chance that no computer will be infected
+                    <br> and a 60% chance that 2,000,000 computers will be infected.</div>`,
+                frame:"loss",
+                type:"uncertain"
+            },
+        ];
+        
 
         /* ----------------------------------------------------------
         /**  Welcome  */
@@ -47,8 +206,8 @@
             stimulus: '<h1>Welcome to our hypothetical decision-making experiment.</h1><p><br>Please use Chrome, Firefox, Safari or Edge, and make sure that your Internet connection is stable.</p>',
             choices: ["Click here to continue"]
         };
-        timeline.push(welcome);
 
+        timeline.push(welcome);
         /* Consent */
         var consent = {
             data: {
@@ -102,6 +261,7 @@
         timeline.push(consent);
 
         /* Instruction */
+        const styleSetup = "style='width:1000px; height:auto; display:block; margin-left:auto; margin-right:auto;'";
         const instruction_slides = [
                 `
                 <img src="../img/Instruction_01.png" ${styleSetup};></img>
@@ -128,6 +288,7 @@
             }
         }
         timeline.push(instructions);
+        
         /* ----------------------------------------------------------
 
         /**  Setup Task  */
@@ -144,15 +305,22 @@
         
         // Test
         var test = {
-            type: jsPsychSurveyMultiChoice,
-            questions: [
-                {
-                prompt: jsPsych.timelineVariable('question'),  // Use the question from timeline variables
-                options: ['A', 'B', 'C: Flip a coin'], 
-                required: true,
-                horizontal: true,
-                }, 
-            ],
+            type: jsPsychHtmlButtonResponse,
+            stimulus: jsPsych.timelineVariable('content'),
+            choices: function() {
+                // Get the current question's 'question' parameter from timeline variables
+                var current_question = jsPsych.timelineVariable('question', true);
+
+                // Filter task_options for the matching question and selected frame
+                let filteredOptions = task_options
+                    .filter(option => option.question === current_question && option.frame === selected_frame)
+                    .map(option => option.content); // Return only the content of matching options
+
+                // Add the constant third choice to the filtered options
+                filteredOptions.push(flipCoinOption);
+
+                return filteredOptions;
+            }
         };
 
         // Evaluation
@@ -174,8 +342,7 @@
             };
 
         /** ---------------------  Practice ------------------------------ */
-        // Practice Stimuli
-        const practice_stimuli = all_stimuli.filter(stimulus => stimulus.frame === selected_frame && stimulus.type === "practice");
+        const practice_stimuli = task_questions.filter(stimulus => stimulus.type === "practice");
 
         // ready to start 
         var practice_start = {
@@ -192,16 +359,16 @@
         };
         timeline.push(practice_start);
 
-        // Practice test
+        /* Define practice procedure */
         var practice_procedure = {
             timeline: [fixation, test, evaluate_confidence],
-            timeline_variables: practice_stimuli
+            timeline_variables: practice_stimuli,
+            randomize_order: true
         };
         timeline.push(practice_procedure);
 
         /** ---------------------  Formal ------------------------------ */
-        const test_stimuli = all_stimuli.filter(stimulus => stimulus.frame === selected_frame && stimulus.type === "formal");
-
+        const formal_stimuli = task_questions.filter(stimulus => stimulus.type === "formal");
         var formal_start = {
             data: {
                 screen_id: "formal-start"
@@ -214,13 +381,13 @@
         };
         timeline.push(formal_start);
 
-        /* Define test procedure */
-        var test_procedure = {
+        /* Define formal procedure */
+        var formal_procedure = {
             timeline: [fixation, test, evaluate_confidence],
-            timeline_variables: test_stimuli,
+            timeline_variables: formal_stimuli,
             randomize_order: true
         };
-        timeline.push(test_procedure);
+        timeline.push(formal_procedure);
 
         /* ----------------------------------------------------------
         /* Survey 
@@ -245,7 +412,7 @@
                         isAllRowRequired: true,
                         rows: [
                             {text: 'If these questions matter to me.'},
-                            {text: 'If tit is not my responsibility to make a choice in these situations.'},
+                            {text: 'If it is not my responsibility to make a choice in these situations.'},
                             {text: 'If the options are different to me.'},
                             {text: 'If more information is needed to make my decisions.'}
                         ],
@@ -343,6 +510,7 @@
             }
         };
         timeline.push(demographicQuestions)
+        
 
         // Run the experiment
         jsPsych.run(timeline);
