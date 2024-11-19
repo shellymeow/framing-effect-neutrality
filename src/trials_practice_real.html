@@ -201,6 +201,10 @@
                 // Get the current question's identifier
                 var currentQuestion = jsPsych.timelineVariable('question', true);
 
+                // Log the current question for debugging
+                console.log("Current Question:", currentQuestion);
+                console.log("Selected Frame:", selected_frame);
+
                 // Initialize variables for "certain," "uncertain," and "neutral" choices
                 var certainChoice = null;
                 var uncertainChoice = null;
@@ -210,15 +214,23 @@
                 for (var i = 0; i < task_options.length; i++) {
                     var option = task_options[i];
 
+                    // Log each option for debugging
+                    console.log("Checking option:", option);
+
                     // Check if the option matches the current question and frame
                     if (option.question === currentQuestion && option.frame === selected_frame) {
                         if (option.type === "certain") {
                             certainChoice = option.content;
+                            console.log("Certain choice set:", certainChoice);
                         } else if (option.type === "uncertain") {
                             uncertainChoice = option.content;
+                            console.log("Uncertain choice set:", uncertainChoice);
                         }
                     }
                 }
+
+                // Log final choices for debugging
+                console.log("Choices for current trial:", [certainChoice, uncertainChoice, neutralChoice]);
 
                 // Return an array containing the specified choices
                 return [certainChoice, uncertainChoice, neutralChoice];
