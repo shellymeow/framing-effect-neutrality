@@ -181,22 +181,34 @@
 
         // Define the trial with jsPsych html-button-response plugin
         var trial = {
-            type: jsPsychHtmlButtonResponse,
-            stimulus: jsPsych.timelineVariable('content'),
-            choices: function() {
-                // Get the current question's 'question' parameter from timeline variables
-                var current_question = jsPsych.timelineVariable('question', true);
+            type: jsPsychHtmlButtonResponse, // Specify trial type
+            stimulus: jsPsych.timelineVariable('content'), // Retrieve stimulus from timeline variables
+            choices: function () {
+                // Get the current question's identifier
+                var currentQuestion = jsPsych.timelineVariable('question', true);
 
-                // Filter task_options for the matching question and selected frame
-                let filteredOptions = task_options
-                    .filter(option => option.question === current_question && option.frame === selected_frame)
-                    .map(option => option.content); // Return only the content of matching options
+                // Initialize variables for "certain," "uncertain," and "neutral" choices
+                var certainChoice = null;
+                var uncertainChoice = null;
+                var neutralChoice = flipCoinOption;
 
-                // Add the constant third choice to the filtered options
-                filteredOptions.push(flipCoinOption);
+                // Iterate through task options to find matching choices
+                for (var i = 0; i < task_options.length; i++) {
+                    var option = task_options[i];
 
-                return filteredOptions;
-            }
+                    // Check if the option matches the current question and frame
+                    if (option.question === currentQuestion && option.frame === selected_frame) {
+                        if (option.type === "certain") {
+                            certainChoice = option.content;
+                        } else if (option.type === "uncertain") {
+                            uncertainChoice = option.content;
+                        }
+                    }
+                }
+
+                // Return an array containing the specified choices
+                return [certainChoice, uncertainChoice, neutralChoice];
+            },
         };
 
         // Define the trial procedure
