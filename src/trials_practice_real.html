@@ -193,48 +193,39 @@
         // Coin flip to select gain or loss frames
         var selected_frame = Math.random() > 0.5 ? "loss" : "gain";
         // Fixation 
+        
         // Test
         var test = {
             type: jsPsychHtmlButtonResponse, // Specify trial type
             stimulus: jsPsych.timelineVariable('content'), // Retrieve stimulus from timeline variables
             choices: function () {
-                // Get the current question's identifier
-                var currentQuestion = jsPsych.timelineVariable('question', true);
+                // Log the raw timeline variable object for debugging
+                console.log("TimelineVariable object:", jsPsych.timelineVariable('question'));
 
-                // Log the current question for debugging
-                console.log("Current Question:", currentQuestion);
-                console.log("Selected Frame:", selected_frame);
+                // Retrieve the value of 'question' from the timeline variable
+                var currentQuestion = jsPsych.timelineVariable('question');
+                console.log("Current Question (value):", currentQuestion);
 
-                // Initialize variables for "certain," "uncertain," and "neutral" choices
                 var certainChoice = null;
                 var uncertainChoice = null;
                 var neutralChoice = flipCoinOption;
 
-                // Iterate through task options to find matching choices
                 for (var i = 0; i < task_options.length; i++) {
                     var option = task_options[i];
-
-                    // Log each option for debugging
                     console.log("Checking option:", option);
 
-                    // Check if the option matches the current question and frame
                     if (option.question === currentQuestion && option.frame === selected_frame) {
                         if (option.type === "certain") {
                             certainChoice = option.content;
-                            console.log("Certain choice set:", certainChoice);
                         } else if (option.type === "uncertain") {
                             uncertainChoice = option.content;
-                            console.log("Uncertain choice set:", uncertainChoice);
                         }
                     }
                 }
 
-                // Log final choices for debugging
                 console.log("Choices for current trial:", [certainChoice, uncertainChoice, neutralChoice]);
-
-                // Return an array containing the specified choices
                 return [certainChoice, uncertainChoice, neutralChoice];
-            },
+            }
         };
 
         // Evaluation
