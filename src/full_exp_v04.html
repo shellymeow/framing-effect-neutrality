@@ -306,6 +306,12 @@
             type: jsPsychHtmlButtonResponse, // Specify trial type
             stimulus: jsPsych.timelineVariable('content'), // Retrieve stimulus from timeline variables
             choices: function () {
+                // Log timeline list
+                console.log("TimelineVariable list:",task_questions)
+
+                // Log the raw timeline variable object for debugging
+                console.log("TimelineVariable object:", jsPsych.timelineVariable);
+
                 // Get the current question's identifier
                 var currentQuestion = jsPsych.timelineVariable('question', true);
 
@@ -354,6 +360,7 @@
 
         /** ---------------------  Practice ------------------------------ */
         const practice_stimuli = task_questions.filter(stimulus => stimulus.type === "practice");
+        
 
         // ready to start 
         var practice_start = {
