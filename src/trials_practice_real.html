@@ -199,6 +199,12 @@
             type: jsPsychHtmlButtonResponse, // Specify trial type
             stimulus: jsPsych.timelineVariable('content'), // Retrieve stimulus from timeline variables
             choices: function () {
+                // Log timeline list
+                console.log("TimelineVariable list:",task_questions)
+
+                // Log the raw timeline variable object for debugging
+                console.log("TimelineVariable object:", jsPsych.timelineVariable);
+                
                 // Log the raw timeline variable object for debugging
                 console.log("TimelineVariable object:", jsPsych.timelineVariable('question'));
 
